@@ -68,7 +68,7 @@ jobs:
 
       # Need this for both 'zig build' and 'cargo zigbuild'
       - name: Setup Zig
-        uses: mlugg/setup-zig@7dccf5e6d09267c55f815f2db29495f30ba2ebca # v2.0.1
+        uses: mlugg/setup-zig@8d6198c65fb0feaa111df26e6b467fea8345e46f # v2.0.5
 
       - name: Install cargo-zigbuild
         run: cargo install --locked cargo-zigbuild
