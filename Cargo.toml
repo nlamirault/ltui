@@ -1,0 +1,41 @@
+[package]
+name = "ltui"
+version = "0.1.0"
+edition = "2021"
+authors = ["Nicolas Lamirault <nicolas.lamirault@gmail.com>"]
+description = "Terminal UI for Linear - A TUI client for managing Linear issues and projects"
+repository = "https://github.com/nlamirault/ltui"
+license = "MIT"
+readme = "README.md"
+keywords = ["linear", "tui", "terminal", "cli", "productivity"]
+categories = ["command-line-utilities"]
+
+[dependencies]
+# TUI Framework
+ratatui = "0.26"
+crossterm = "0.27"
+
+# GraphQL Client
+reqwest = { version = "0.11", features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Configuration and CLI
+clap = { version = "4.4", features = ["derive", "env"] }
+config = "0.14"
+dirs = "5.0"
+toml = "0.8"
+
+# Async runtime
+tokio = { version = "1.35", features = ["full"] }
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Utilities
+uuid = { version = "1.6", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+
+[dev-dependencies]
+tokio-test = "0.4"
