@@ -1,0 +1,34 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+    labels:
+      - dependency/github
+      - kind/maintenance
+      - lifecycle/active
+      - priority/low
+      - status/review_needed
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: daily
+    labels:
+      - dependency/docker
+      - kind/maintenance
+      - lifecycle/active
+      - priority/low
+      - status/review_needed
+
+  - package-ecosystem: cargo
+    directory: /
+    schedule:
+      interval: daily
+    labels:
+      - dependency/github
+      - kind/maintenance
+      - lifecycle/active
+      - priority/low
+      - status/review_needed
