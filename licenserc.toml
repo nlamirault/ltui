@@ -10,8 +10,9 @@
 headerPath = "hack/header.txt"
 
 includes = [
-  "*.py",
+  "*.rs",
   "*.yaml",
+  "*.yml",
   "*.toml",
   "Makefile",
 ]

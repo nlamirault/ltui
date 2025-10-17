@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
+# SPDX-License-Identifier: Apache-2.0
+
 # Dependency Review Action
 #
 # This Action will scan dependency manifest files that change as part of a Pull Request,

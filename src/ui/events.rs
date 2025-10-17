@@ -1,4 +1,7 @@
-use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind};
+// SPDX-FileCopyrightText: Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
+use crossterm::event::{self, Event, KeyEvent, KeyEventKind};
 use std::time::Duration;
 use tokio::sync::mpsc;
 

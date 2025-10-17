@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 use anyhow::{Context, Result};
 
 use crate::client::LinearClient;
@@ -6,7 +9,6 @@ use crate::ui::TuiApp;
 
 pub struct App {
     client: LinearClient,
-    config: Config,
 }
 
 impl App {
@@ -22,7 +24,7 @@ impl App {
             "Failed to authenticate with Linear API. Please check your Personal API Key.",
         )?;
 
-        Ok(Self { client, config })
+        Ok(Self { client })
     }
 
     pub async fn run(&self) -> Result<()> {

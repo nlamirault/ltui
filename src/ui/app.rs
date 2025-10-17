@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
+// SPDX-License-Identifier: Apache-2.0
+
 use crossterm::event::{KeyCode, KeyModifiers};
 use ratatui::{
     layout::{Constraint, Direction, Layout},
@@ -246,14 +249,14 @@ impl TuiApp {
 
     fn render(&mut self, f: &mut Frame) {
         if self.state.show_help {
-            HelpComponent::render(f, f.size());
+            HelpComponent::render(f, f.area());
             return;
         }
 
         let chunks = Layout::default()
             .direction(Direction::Vertical)
             .constraints([Constraint::Length(3), Constraint::Min(0), Constraint::Length(1)])
-            .split(f.size());
+            .split(f.area());
 
         // Header with tabs
         let tab_titles = vec!["Issues", "Projects", "Teams"];
