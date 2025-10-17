@@ -1,0 +1,112 @@
+# SPDX-FileCopyrightText: Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
+# SPDX-License-Identifier: Apache-2.0
+
+---
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+
+default_install_hook_types:
+- pre-commit
+- pre-push
+- commit-msg
+
+default_stages:
+- pre-commit
+- pre-push
+- commit-msg
+
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.6.0
+  hooks:
+  - id: trailing-whitespace
+    name: "📁 filesystem /📝 files - check whitespace"
+    stages: [pre-commit]
+  - id: end-of-file-fixer
+    name: "📁 filesystem /📝 files - check end of file"
+    stages: [pre-commit]
+  - id: check-added-large-files
+    name: "📁 filesystem /📝 files - check large files"
+    stages: [pre-commit]
+  - id: check-executables-have-shebangs
+    name: "📁 filesystem /⚙️ exec · Verify shebang presence"
+    stages: [pre-commit]
+  - id: check-shebang-scripts-are-executable
+    name: "📁 filesystem /⚙️ exec · Verify script permissions"
+    stages: [pre-commit]
+- repo: https://github.com/compilerla/conventional-pre-commit
+  rev: v4.2.0
+  hooks:
+  - id: conventional-pre-commit
+    stages: [commit-msg]
+    args: [--strict, --force-scope, build, chore, ci, docs, refactor, perf, test]
+- repo: https://github.com/jumanjihouse/pre-commit-hooks
+  rev: 3.0.0
+  hooks:
+  - id: shellcheck
+    stages: [pre-commit]
+    exclude: hack/hooks/pre-commit.git-crypt.sh
+  - id: shfmt
+    stages: [pre-commit]
+    args: ["-i 4"]
+- repo: https://github.com/gitleaks/gitleaks
+  rev: v8.16.3
+  hooks:
+  - id: gitleaks
+- repo: https://github.com/crate-ci/typos
+  rev: v1.26.0
+  hooks:
+    - id: typos
+- repo: local
+  hooks:
+  - id: dprint
+    name: "📝 Dprint / Formatting"
+    entry: bash -c 'dprint fmt'
+    language: system
+    pass_filenames: true
+    files: \.*$
+    args: []
+- repo: local
+  hooks:
+  - id: hawkeye
+    name: "📄 Hawkeye / Insert license header"
+    entry: bash -c 'hawkeye format'
+    language: system
+    pass_filenames: true
+    files: \.*$
+    args: []
+- repo: local
+  hooks:
+  - id: cargo-fmt
+    name: "📝 Rust / Formatting"
+    entry: cargo fmt --
+    language: system
+    types: [rust]
+    pass_filenames: false # This makes it a lot faster
+- repo: local
+  hooks:
+  - id: cargo-clippy
+    name: "📝 Rust / Clippy"
+    language: system
+    types: [rust]
+    pass_filenames: false
+    entry: cargo clippy --all-targets --all-features -- -D warnings
+- repo: https://github.com/python-jsonschema/check-jsonschema
+  rev: 0.33.3
+  hooks:
+  - id: check-renovate
+    name: "✅ renovate / Validate Renovate configuration"
+    stages: [pre-commit]
+    additional_dependencies: ["json5"]
+- repo: https://github.com/python-jsonschema/check-jsonschema
+  rev: 0.33.3
+  hooks:
+  - id: check-github-actions
+    name: "✅ github-actions / Validate Github Actions configuration"
+    stages: [pre-commit]
+- repo: https://github.com/python-jsonschema/check-jsonschema
+  rev: 0.33.3
+  hooks:
+  - id: check-github-workflows
+    name: "✅ github-actions / Validate Github Actions workflow"
+    stages: [pre-commit]
