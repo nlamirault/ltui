@@ -1,0 +1,122 @@
+---
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+version: 2
+
+# Project name should ideally match the project name in your Cargo.toml.
+project_name: ltui
+
+# before:
+#   hooks:
+#     - rustup default stable
+#     - cargo install --locked cargo-zigbuild
+#     - cargo fetch --locked
+
+builds:
+  # macOS build (native)
+  - id: "ltui-macos"
+    builder: rust
+    binary: ltui
+    targets:
+      - aarch64-apple-darwin # Native target for Apple Silicon
+    dir: "."
+    tool: "cargo"
+    command: build
+    flags:
+      - --release
+  # Linux build (cross-compiled from macOS)
+  - id: "ltui-linux"
+    builder: rust
+    binary: ltui
+    targets:
+      - x86_64-unknown-linux-gnu
+      - aarch64-unknown-linux-gnu
+    dir: "."
+    command: zigbuild
+    flags:
+      - --release
+
+checksum: # https://goreleaser.com/customization/checksum/
+  name_template: "checksums.txt"
+  algorithm: sha256
+
+# Changelog configuration (will be in the github release).
+# https://goreleaser.com/customization/changelog/
+changelog:
+  use: github-native
+  sort: asc
+  filters:
+    exclude:
+      - "^test:"
+      - '^ci:'
+
+# https://goreleaser.com/customization/release/
+release:
+  # draft: true
+  replace_existing_draft: true
+  # name_template: "{{ .ProjectName }} {{ .Tag }}"
+  header: |
+    Released on {{ .Date }}
+
+# Enables source archives.
+# source:
+#   enabled: true
+
+# Creates archives for each target.
+# https://goreleaser.com/customization/archive/
+archives:
+  # - formats: [ 'tar.gz' ]
+  #   # this name template makes the OS and Arch compatible with the results of `uname`.
+  #   name_template: >-
+  #     {{ .ProjectName }}_
+  #     {{- title .Os }}_
+  #     {{- if eq .Arch "amd64" }}x86_64
+  #     {{- else if eq .Arch "386" }}i386
+  #     {{- else }}{{ .Arch }}{{ end }}
+  #   # use zip for windows archives
+  #   format_overrides:
+  #     - goos: windows
+  #       formats: [ 'zip' ]
+  - formats: binary
+    name_template: "{{ .Binary }}_{{ .Os }}_{{ .Arch }}_v{{- .Version }}"
+    # ids:
+    #   - ltui-macos
+    #   - ltui-linux
+
+# Creates Linux packages.
+# nfpms:
+#   - file_name_template: "{{ .ConventionalFileName }}"
+#     maintainer: Nicolas Lamirault <nicolas.lamirault@gmail.com>
+#     formats:
+#       - deb
+#       - apk
+#       - rpm
+
+# creates SBOMs of all archives and the source tarball using syft
+# https://goreleaser.com/customization/sbom
+sboms:
+  - id: spdx
+    artifacts: binary
+  # - id: spdx
+  #   artifacts: archive
+
+# # Sign binaries with cosign.
+# signs:
+#   - cmd: cosign
+#     certificate: "${artifact}.pem"
+#     args:
+#       - sign-blob
+#       - "--output-certificate=${certificate}"
+#       - "--output-signature=${signature}"
+#       - "${artifact}"
+#       - "--yes"
+#     artifacts: checksum
+
+brews:
+  - repository:
+      owner: nlamirault
+      name: homebrew-tap
+      token: "{{ .Env.GH_PAT }}"
+    directory: Formula
+    homepage: https://github.com/nlamirault/ltui
+    description: ltui is Google Cloud Instances Terminal UI Manager. Inspired by k9s and e1s.
+    license: Apache v2
