@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+title: ltui
+message: >-
+  A terminal-based UI application for managing Google Cloud instances
+type: software
+authors:
+  - given-names: Nicolas
+    family-names: Lamirault
+    email: nicolas.lamirault@gmail.com
+abstract: >-
+  A TUI client for managing Linear issues and projects
+keywords:
+  - terminal ui
+  - linear
+license: Apache-2.0
+repository-code: 'https://github.com/nlamirault/ltui'
+url: 'https://github.com/nlamirault/ltui'

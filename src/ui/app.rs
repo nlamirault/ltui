@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crossterm::event::{KeyCode, KeyModifiers};
-use ratatui::{
+use ratatouille::{
     layout::{Constraint, Direction, Layout},
     style::{Color, Style},
     text::{Line, Span},
@@ -71,8 +71,8 @@ impl TuiApp {
             crossterm::cursor::Hide
         )?;
 
-        let backend = ratatui::backend::CrosstermBackend::new(stdout);
-        let mut terminal = ratatui::Terminal::new(backend)?;
+        let backend = ratatouille::backend::CrosstermBackend::new(stdout);
+        let mut terminal = ratatouille::Terminal::new(backend)?;
 
         self.event_handler.start();
         self.load_initial_data().await?;
@@ -92,46 +92,46 @@ impl TuiApp {
 
     async fn run_app(
         &mut self,
-        terminal: &mut ratatui::Terminal<ratatui::backend::CrosstermBackend<std::io::Stdout>>,
+        terminal: &mut ratatouille::Terminal<
+            ratatouille::backend::CrosstermBackend<std::io::Stdout>,
+        >,
     ) -> anyhow::Result<()> {
         loop {
             terminal.draw(|f| self.render(f))?;
 
             if let Some(event) = self.event_handler.next().await {
                 match event {
-                    AppEvent::Key(key_event) => {
-                        match (key_event.code, key_event.modifiers) {
-                            (KeyCode::Char('q'), _) | (KeyCode::Char('c'), KeyModifiers::CONTROL) => {
-                                break;
-                            }
-                            (KeyCode::Char('?'), _) => {
-                                self.state.show_help = !self.state.show_help;
-                            }
-                            (KeyCode::Char('r'), _) => {
-                                self.refresh_current_view().await?;
-                            }
-                            (KeyCode::Char('1'), _) => {
-                                self.state.current_view = View::Issues;
-                            }
-                            (KeyCode::Char('2'), _) => {
-                                self.state.current_view = View::Projects;
-                            }
-                            (KeyCode::Char('3'), _) => {
-                                self.state.current_view = View::Teams;
-                            }
-                            (KeyCode::Tab, _) => {
-                                self.next_view();
-                            }
-                            (KeyCode::BackTab, _) => {
-                                self.previous_view();
-                            }
-                            _ => {
-                                if !self.state.show_help {
-                                    self.handle_view_input(key_event.code).await?;
-                                }
+                    AppEvent::Key(key_event) => match (key_event.code, key_event.modifiers) {
+                        (KeyCode::Char('q'), _) | (KeyCode::Char('c'), KeyModifiers::CONTROL) => {
+                            break;
+                        }
+                        (KeyCode::Char('?'), _) => {
+                            self.state.show_help = !self.state.show_help;
+                        }
+                        (KeyCode::Char('r'), _) => {
+                            self.refresh_current_view().await?;
+                        }
+                        (KeyCode::Char('1'), _) => {
+                            self.state.current_view = View::Issues;
+                        }
+                        (KeyCode::Char('2'), _) => {
+                            self.state.current_view = View::Projects;
+                        }
+                        (KeyCode::Char('3'), _) => {
+                            self.state.current_view = View::Teams;
+                        }
+                        (KeyCode::Tab, _) => {
+                            self.next_view();
+                        }
+                        (KeyCode::BackTab, _) => {
+                            self.previous_view();
+                        }
+                        _ => {
+                            if !self.state.show_help {
+                                self.handle_view_input(key_event.code).await?;
                             }
                         }
-                    }
+                    },
                     AppEvent::Refresh => {
                         self.refresh_current_view().await?;
                     }
@@ -210,10 +210,10 @@ impl TuiApp {
 
     async fn load_initial_data(&mut self) -> anyhow::Result<()> {
         self.state.loading = true;
-        
+
         let teams = self.client.get_teams().await?;
         self.state.teams_component.update_teams(teams);
-        
+
         if let Some(team) = self.state.teams_component.teams.first() {
             self.state.current_team = Some(team.clone());
             self.load_team_data().await?;
@@ -255,7 +255,11 @@ impl TuiApp {
 
         let chunks = Layout::default()
             .direction(Direction::Vertical)
-            .constraints([Constraint::Length(3), Constraint::Min(0), Constraint::Length(1)])
+            .constraints([
+                Constraint::Length(3),
+                Constraint::Min(0),
+                Constraint::Length(1),
+            ])
             .split(f.area());
 
         // Header with tabs
@@ -303,7 +307,7 @@ impl TuiApp {
             Span::styled("Press 'q' to quit", Style::default().fg(Color::Gray)),
         ]);
 
-        let status_bar = ratatui::widgets::Paragraph::new(status_line)
+        let status_bar = ratatouille::widgets::Paragraph::new(status_line)
             .block(Block::default().borders(Borders::TOP));
 
         f.render_widget(status_bar, chunks[2]);

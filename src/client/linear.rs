@@ -27,7 +27,6 @@ impl LinearClient {
     where
         T: serde::de::DeserializeOwned,
     {
-
         let request = GraphQLRequest {
             query: query.to_string(),
             variables,
@@ -55,8 +54,8 @@ impl LinearClient {
             .await
             .context("Failed to get response text")?;
 
-        let graphql_response: GraphQLResponse<T> = serde_json::from_str(&response_text)
-            .context("Failed to parse GraphQL response")?;
+        let graphql_response: GraphQLResponse<T> =
+            serde_json::from_str(&response_text).context("Failed to parse GraphQL response")?;
 
         if let Some(errors) = graphql_response.errors {
             let error_messages: Vec<String> = errors.iter().map(|e| e.message.clone()).collect();

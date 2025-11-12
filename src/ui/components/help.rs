@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
 // SPDX-License-Identifier: Apache-2.0
 
-use ratatui::{
+use ratatouille::{
     style::{Color, Style},
     text::{Line, Span, Text},
     widgets::{Block, Borders, Paragraph},
@@ -11,11 +11,12 @@ use ratatui::{
 pub struct HelpComponent;
 
 impl HelpComponent {
-    pub fn render(f: &mut Frame, area: ratatui::layout::Rect) {
+    pub fn render(f: &mut Frame, area: ratatouille::layout::Rect) {
         let help_text = Text::from(vec![
-            Line::from(vec![
-                Span::styled("Navigation:", Style::default().fg(Color::Yellow)),
-            ]),
+            Line::from(vec![Span::styled(
+                "Navigation:",
+                Style::default().fg(Color::Yellow),
+            )]),
             Line::from(vec![
                 Span::raw("  "),
                 Span::styled("Tab/Shift+Tab", Style::default().fg(Color::Cyan)),
@@ -27,9 +28,10 @@ impl HelpComponent {
                 Span::raw("      Navigate up/down"),
             ]),
             Line::from(""),
-            Line::from(vec![
-                Span::styled("Actions:", Style::default().fg(Color::Yellow)),
-            ]),
+            Line::from(vec![Span::styled(
+                "Actions:",
+                Style::default().fg(Color::Yellow),
+            )]),
             Line::from(vec![
                 Span::raw("  "),
                 Span::styled("r", Style::default().fg(Color::Cyan)),
@@ -56,9 +58,10 @@ impl HelpComponent {
                 Span::raw("             Create new issue (in issues view)"),
             ]),
             Line::from(""),
-            Line::from(vec![
-                Span::styled("Views:", Style::default().fg(Color::Yellow)),
-            ]),
+            Line::from(vec![Span::styled(
+                "Views:",
+                Style::default().fg(Color::Yellow),
+            )]),
             Line::from(vec![
                 Span::raw("  "),
                 Span::styled("1", Style::default().fg(Color::Cyan)),
@@ -75,9 +78,10 @@ impl HelpComponent {
                 Span::raw("             Teams view"),
             ]),
             Line::from(""),
-            Line::from(vec![
-                Span::styled("Other:", Style::default().fg(Color::Yellow)),
-            ]),
+            Line::from(vec![Span::styled(
+                "Other:",
+                Style::default().fg(Color::Yellow),
+            )]),
             Line::from(vec![
                 Span::raw("  "),
                 Span::styled("?", Style::default().fg(Color::Cyan)),
@@ -90,8 +94,8 @@ impl HelpComponent {
             ]),
         ]);
 
-        let paragraph = Paragraph::new(help_text)
-            .block(Block::default().borders(Borders::ALL).title(" Help "));
+        let paragraph =
+            Paragraph::new(help_text).block(Block::default().borders(Borders::ALL).title(" Help "));
 
         f.render_widget(paragraph, area);
     }
