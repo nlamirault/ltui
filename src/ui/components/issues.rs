@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
 // SPDX-License-Identifier: Apache-2.0
 
-use ratatui::{
+use ratatouille::{
     layout::{Constraint, Direction, Layout},
     style::{Color, Modifier, Style},
     text::{Line, Span, Text},
@@ -112,7 +112,7 @@ impl IssuesComponent {
         }
     }
 
-    pub fn render(&mut self, f: &mut Frame, area: ratatui::layout::Rect) {
+    pub fn render(&mut self, f: &mut Frame, area: ratatouille::layout::Rect) {
         if self.show_details {
             self.render_issue_details(f, area);
         } else {
@@ -141,7 +141,7 @@ impl IssuesComponent {
         }
     }
 
-    fn render_title_bar(&self, f: &mut Frame, area: ratatui::layout::Rect) {
+    fn render_title_bar(&self, f: &mut Frame, area: ratatouille::layout::Rect) {
         let title_text = if !self.filter.is_empty() {
             format!("🎯 Linear Issues - Filter: '{}'", self.filter)
         } else {
@@ -162,7 +162,7 @@ impl IssuesComponent {
         f.render_widget(title, area);
     }
 
-    fn render_overview_panel(&self, f: &mut Frame, area: ratatui::layout::Rect) {
+    fn render_overview_panel(&self, f: &mut Frame, area: ratatouille::layout::Rect) {
         let total_issues = self.issues.len();
 
         // Count issues by state
@@ -256,7 +256,7 @@ impl IssuesComponent {
         f.render_widget(overview, area);
     }
 
-    fn render_issues_list(&mut self, f: &mut Frame, area: ratatui::layout::Rect) {
+    fn render_issues_list(&mut self, f: &mut Frame, area: ratatouille::layout::Rect) {
         if self.issues.is_empty() {
             let empty_msg = Paragraph::new("No issues found")
                 .style(Style::default().fg(Color::Gray))
@@ -397,7 +397,7 @@ impl IssuesComponent {
     fn render_issues_header(
         &self,
         f: &mut Frame,
-        area: ratatui::layout::Rect,
+        area: ratatouille::layout::Rect,
         id_width: u16,
         priority_width: u16,
         title_width: u16,
@@ -450,7 +450,7 @@ impl IssuesComponent {
         f.render_widget(header_paragraph, area);
     }
 
-    fn render_status_bar(&self, f: &mut Frame, area: ratatui::layout::Rect) {
+    fn render_status_bar(&self, f: &mut Frame, area: ratatouille::layout::Rect) {
         let status_text = if let Some(issue) = self.selected_issue() {
             let creator = &issue.creator.display_name;
             let team = &issue.team.key;
@@ -485,15 +485,15 @@ impl IssuesComponent {
         }
     }
 
-    fn render_issue_details(&self, f: &mut Frame, area: ratatui::layout::Rect) {
+    fn render_issue_details(&self, f: &mut Frame, area: ratatouille::layout::Rect) {
         if let Some(issue) = self.selected_issue() {
             // Create 3-section layout for details view
             let main_chunks = Layout::default()
                 .direction(Direction::Vertical)
                 .constraints([
-                    Constraint::Length(5),  // Header with issue info
-                    Constraint::Min(8),     // Description/comments area
-                    Constraint::Length(3),  // Status bar with navigation info
+                    Constraint::Length(5), // Header with issue info
+                    Constraint::Min(8),    // Description/comments area
+                    Constraint::Length(3), // Status bar with navigation info
                 ])
                 .split(area);
 
@@ -518,7 +518,7 @@ impl IssuesComponent {
         }
     }
 
-    fn render_issue_header(&self, f: &mut Frame, area: ratatui::layout::Rect, issue: &Issue) {
+    fn render_issue_header(&self, f: &mut Frame, area: ratatouille::layout::Rect, issue: &Issue) {
         let priority_color = match issue.priority.unwrap_or(0) {
             4 => Color::Red,
             3 => Color::Yellow,
@@ -553,11 +553,15 @@ impl IssuesComponent {
             Line::from(vec![
                 Span::styled(
                     format!("{} - ", issue.identifier),
-                    Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD),
+                    Style::default()
+                        .fg(Color::Cyan)
+                        .add_modifier(Modifier::BOLD),
                 ),
                 Span::styled(
                     &issue.title,
-                    Style::default().fg(Color::White).add_modifier(Modifier::BOLD),
+                    Style::default()
+                        .fg(Color::White)
+                        .add_modifier(Modifier::BOLD),
                 ),
             ]),
             Line::from(vec![
@@ -572,7 +576,10 @@ impl IssuesComponent {
                 Span::styled(assignee, Style::default().fg(Color::White)),
                 Span::raw("  |  "),
                 Span::styled("Creator: ", Style::default().fg(Color::Gray)),
-                Span::styled(&issue.creator.display_name, Style::default().fg(Color::White)),
+                Span::styled(
+                    &issue.creator.display_name,
+                    Style::default().fg(Color::White),
+                ),
             ]),
         ]);
 
@@ -585,9 +592,17 @@ impl IssuesComponent {
         f.render_widget(header, area);
     }
 
-    fn render_issue_description(&self, f: &mut Frame, area: ratatui::layout::Rect, issue: &Issue) {
-        let description = issue.description.as_deref().unwrap_or("No description available");
-        
+    fn render_issue_description(
+        &self,
+        f: &mut Frame,
+        area: ratatouille::layout::Rect,
+        issue: &Issue,
+    ) {
+        let description = issue
+            .description
+            .as_deref()
+            .unwrap_or("No description available");
+
         // Split the description into lines that fit the available width
         let inner_width = area.width.saturating_sub(4) as usize; // Account for borders and padding
         let wrapped_lines: Vec<Line> = description
@@ -600,7 +615,7 @@ impl IssuesComponent {
                     let mut wrapped = Vec::new();
                     let words: Vec<&str> = line.split_whitespace().collect();
                     let mut current_line = String::new();
-                    
+
                     for word in words {
                         if current_line.len() + word.len() + 1 <= inner_width {
                             if !current_line.is_empty() {
@@ -632,13 +647,14 @@ impl IssuesComponent {
                     .title(" Description ")
                     .border_style(Style::default().fg(Color::Gray)),
             )
-            .wrap(ratatui::widgets::Wrap { trim: true });
+            .wrap(ratatouille::widgets::Wrap { trim: true });
 
         f.render_widget(description_widget, area);
     }
 
-    fn render_details_status_bar(&self, f: &mut Frame, area: ratatui::layout::Rect) {
-        let status_text = "Press 'd' to return to list view | Press 'v' to open in browser | Press ? for help";
+    fn render_details_status_bar(&self, f: &mut Frame, area: ratatouille::layout::Rect) {
+        let status_text =
+            "Press 'd' to return to list view | Press 'v' to open in browser | Press ? for help";
 
         let status = Paragraph::new(status_text)
             .style(Style::default().fg(Color::White))

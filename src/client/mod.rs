@@ -5,4 +5,6 @@ pub mod linear;
 pub mod types;
 
 pub use linear::LinearClient;
-pub use types::{Issue, Project, Team, User, IssuesConnection, PageInfo, ProjectStatus, IssueState};
+pub use types::{
+    Issue, IssueState, IssuesConnection, PageInfo, Project, ProjectStatus, Team, User,
+};

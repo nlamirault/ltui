@@ -15,7 +15,7 @@ use cli::Cli;
 #[tokio::main]
 async fn main() -> Result<()> {
     let cli = Cli::parse();
-    
+
     match cli.run().await {
         Ok(_) => Ok(()),
         Err(e) => {
