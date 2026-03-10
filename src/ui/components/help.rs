@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
 // SPDX-License-Identifier: Apache-2.0
 
-use ratatouille::{
+use ratatui::{
     style::{Color, Style},
     text::{Line, Span, Text},
     widgets::{Block, Borders, Paragraph},
@@ -11,7 +11,7 @@ use ratatouille::{
 pub struct HelpComponent;
 
 impl HelpComponent {
-    pub fn render(f: &mut Frame, area: ratatouille::layout::Rect) {
+    pub fn render(f: &mut Frame, area: ratatui::layout::Rect) {
         let help_text = Text::from(vec![
             Line::from(vec![Span::styled(
                 "Navigation:",

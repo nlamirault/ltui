@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crossterm::event::{KeyCode, KeyModifiers};
-use ratatouille::{
+use ratatui::{
     layout::{Constraint, Direction, Layout},
     style::{Color, Style},
     text::{Line, Span},
@@ -71,8 +71,8 @@ impl TuiApp {
             crossterm::cursor::Hide
         )?;
 
-        let backend = ratatouille::backend::CrosstermBackend::new(stdout);
-        let mut terminal = ratatouille::Terminal::new(backend)?;
+        let backend = ratatui::backend::CrosstermBackend::new(stdout);
+        let mut terminal = ratatui::Terminal::new(backend)?;
 
         self.event_handler.start();
         self.load_initial_data().await?;
@@ -92,8 +92,8 @@ impl TuiApp {
 
     async fn run_app(
         &mut self,
-        terminal: &mut ratatouille::Terminal<
-            ratatouille::backend::CrosstermBackend<std::io::Stdout>,
+        terminal: &mut ratatui::Terminal<
+            ratatui::backend::CrosstermBackend<std::io::Stdout>,
         >,
     ) -> anyhow::Result<()> {
         loop {
@@ -307,7 +307,7 @@ impl TuiApp {
             Span::styled("Press 'q' to quit", Style::default().fg(Color::Gray)),
         ]);
 
-        let status_bar = ratatouille::widgets::Paragraph::new(status_line)
+        let status_bar = ratatui::widgets::Paragraph::new(status_line)
             .block(Block::default().borders(Borders::TOP));
 
         f.render_widget(status_bar, chunks[2]);

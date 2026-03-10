@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
 // SPDX-License-Identifier: Apache-2.0
 
-use ratatouille::{
+use ratatui::{
     layout::{Constraint, Direction, Layout},
     style::{Color, Modifier, Style},
     text::{Line, Span, Text},
@@ -112,7 +112,7 @@ impl IssuesComponent {
         }
     }
 
-    pub fn render(&mut self, f: &mut Frame, area: ratatouille::layout::Rect) {
+    pub fn render(&mut self, f: &mut Frame, area: ratatui::layout::Rect) {
         if self.show_details {
             self.render_issue_details(f, area);
         } else {
@@ -141,7 +141,7 @@ impl IssuesComponent {
         }
     }
 
-    fn render_title_bar(&self, f: &mut Frame, area: ratatouille::layout::Rect) {
+    fn render_title_bar(&self, f: &mut Frame, area: ratatui::layout::Rect) {
         let title_text = if !self.filter.is_empty() {
             format!("🎯 Linear Issues - Filter: '{}'", self.filter)
         } else {
@@ -162,7 +162,7 @@ impl IssuesComponent {
         f.render_widget(title, area);
     }
 
-    fn render_overview_panel(&self, f: &mut Frame, area: ratatouille::layout::Rect) {
+    fn render_overview_panel(&self, f: &mut Frame, area: ratatui::layout::Rect) {
         let total_issues = self.issues.len();
 
         // Count issues by state
@@ -256,7 +256,7 @@ impl IssuesComponent {
         f.render_widget(overview, area);
     }
 
-    fn render_issues_list(&mut self, f: &mut Frame, area: ratatouille::layout::Rect) {
+    fn render_issues_list(&mut self, f: &mut Frame, area: ratatui::layout::Rect) {
         if self.issues.is_empty() {
             let empty_msg = Paragraph::new("No issues found")
                 .style(Style::default().fg(Color::Gray))
@@ -397,7 +397,7 @@ impl IssuesComponent {
     fn render_issues_header(
         &self,
         f: &mut Frame,
-        area: ratatouille::layout::Rect,
+        area: ratatui::layout::Rect,
         id_width: u16,
         priority_width: u16,
         title_width: u16,
@@ -450,7 +450,7 @@ impl IssuesComponent {
         f.render_widget(header_paragraph, area);
     }
 
-    fn render_status_bar(&self, f: &mut Frame, area: ratatouille::layout::Rect) {
+    fn render_status_bar(&self, f: &mut Frame, area: ratatui::layout::Rect) {
         let status_text = if let Some(issue) = self.selected_issue() {
             let creator = &issue.creator.display_name;
             let team = &issue.team.key;
@@ -485,7 +485,7 @@ impl IssuesComponent {
         }
     }
 
-    fn render_issue_details(&self, f: &mut Frame, area: ratatouille::layout::Rect) {
+    fn render_issue_details(&self, f: &mut Frame, area: ratatui::layout::Rect) {
         if let Some(issue) = self.selected_issue() {
             // Create 3-section layout for details view
             let main_chunks = Layout::default()
@@ -518,7 +518,7 @@ impl IssuesComponent {
         }
     }
 
-    fn render_issue_header(&self, f: &mut Frame, area: ratatouille::layout::Rect, issue: &Issue) {
+    fn render_issue_header(&self, f: &mut Frame, area: ratatui::layout::Rect, issue: &Issue) {
         let priority_color = match issue.priority.unwrap_or(0) {
             4 => Color::Red,
             3 => Color::Yellow,
@@ -595,7 +595,7 @@ impl IssuesComponent {
     fn render_issue_description(
         &self,
         f: &mut Frame,
-        area: ratatouille::layout::Rect,
+        area: ratatui::layout::Rect,
         issue: &Issue,
     ) {
         let description = issue
@@ -647,12 +647,12 @@ impl IssuesComponent {
                     .title(" Description ")
                     .border_style(Style::default().fg(Color::Gray)),
             )
-            .wrap(ratatouille::widgets::Wrap { trim: true });
+            .wrap(ratatui::widgets::Wrap { trim: true });
 
         f.render_widget(description_widget, area);
     }
 
-    fn render_details_status_bar(&self, f: &mut Frame, area: ratatouille::layout::Rect) {
+    fn render_details_status_bar(&self, f: &mut Frame, area: ratatui::layout::Rect) {
         let status_text =
             "Press 'd' to return to list view | Press 'v' to open in browser | Press ? for help";
 
