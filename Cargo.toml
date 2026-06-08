@@ -15,7 +15,7 @@ categories = ["command-line-utilities"]
 
 [dependencies]
 # TUI Framework
-ratatui = "0.29"
+ratatui = "0.30"
 crossterm = "0.27"
 
 # GraphQL Client
